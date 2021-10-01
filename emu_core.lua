@@ -432,6 +432,7 @@ end
 local function cpu_mod_rm(opcode, is_seg)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
  local modrm = cpu_advance_ip() | ((opcode & 3) << 8) | (is_seg or 0)
  local data = mrm_table[modrm]
 
@@ -447,6 +448,8 @@ local function cpu_mod_rm(opcode, is_seg)
 
  return data
 =======
+=======
+>>>>>>> parent of 202f250 (Fixed some things)
 =======
 >>>>>>> parent of 202f250 (Fixed some things)
     local modrm = cpu_advance_ip() -bor- ((opcode -band- 3) -blshift- 8) -bor- (is_seg or 0)
@@ -514,7 +517,11 @@ end
 local function cpu_write_parity(v)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
  CPU_FLAGS = CPU_FLAGS & 0xFFFB | parity_table[v & 0xFF]
+=======
+    CPU_FLAGS = CPU_FLAGS -band- 0xFFFB -bor- parity_table[v -band- 0xFF]
+>>>>>>> parent of 202f250 (Fixed some things)
 =======
     CPU_FLAGS = CPU_FLAGS -band- 0xFFFB -bor- parity_table[v -band- 0xFF]
 >>>>>>> parent of 202f250 (Fixed some things)
@@ -937,6 +944,7 @@ end
 local function cpu_print_state(opcode, adv)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
  cpu_print(string.format("AX:%04X CX:%04X DX:%04X BX:%04X SP:%04X BP:%04X SI:%04X DI:%04X | %04X %04X %04X %04X | %04X",
   CPU_REGS[1], CPU_REGS[2], CPU_REGS[3], CPU_REGS[4], CPU_REGS[5], CPU_REGS[6], CPU_REGS[7], CPU_REGS[8],
   CPU_SEGMENTS[1], CPU_SEGMENTS[2], CPU_SEGMENTS[3], CPU_SEGMENTS[4], CPU_FLAGS))
@@ -955,6 +963,8 @@ local function cpu_print_state(opcode, adv)
   cpu_print("FLAGS ADV:" .. s2)
  end
 =======
+=======
+>>>>>>> parent of 202f250 (Fixed some things)
 =======
 >>>>>>> parent of 202f250 (Fixed some things)
     cpu_print(string.format("AX:%04X CX:%04X DX:%04X BX:%04X SP:%04X BP:%04X SI:%04X DI:%04X -bor- %04X %04X %04X %04X -bor- %04X",

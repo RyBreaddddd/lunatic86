@@ -258,6 +258,9 @@ function platform_sleep(t)
     -- for what pvrpose
     --platform_kbd_tick()
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 202f250 (Fixed some things)
+=======
 >>>>>>> parent of 202f250 (Fixed some things)
 =======
 >>>>>>> parent of 202f250 (Fixed some things)
@@ -286,6 +289,7 @@ local queued_up = {}
 function platform_getc()
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	local c = lastKey
 	if type(c) == "string" then c = string.byte() end
 	if c == 263 then c = 8 end
@@ -295,6 +299,8 @@ function platform_getc()
 		else return 0,c end
 	end
 =======
+=======
+>>>>>>> parent of 202f250 (Fixed some things)
 =======
 >>>>>>> parent of 202f250 (Fixed some things)
     os.queueEvent("noblock")
@@ -312,6 +318,9 @@ function platform_getc()
     end
     if ev ~= "noblock" then return -1 end
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 202f250 (Fixed some things)
+=======
 >>>>>>> parent of 202f250 (Fixed some things)
 =======
 >>>>>>> parent of 202f250 (Fixed some things)
@@ -342,6 +351,9 @@ function platform_kbd_tick()
         elseif ch ~= -1 then getmore = false end
 	end
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 202f250 (Fixed some things)
+=======
 >>>>>>> parent of 202f250 (Fixed some things)
 =======
 >>>>>>> parent of 202f250 (Fixed some things)
@@ -400,6 +412,9 @@ dofile("emu_core.lua")
 =======
 dofile(pwd .. "emu_core.lua")
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 202f250 (Fixed some things)
+=======
 >>>>>>> parent of 202f250 (Fixed some things)
 =======
 >>>>>>> parent of 202f250 (Fixed some things)
