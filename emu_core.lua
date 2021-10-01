@@ -430,6 +430,7 @@ for i=0,2047 do
 end
 
 local function cpu_mod_rm(opcode, is_seg)
+<<<<<<< HEAD
  local modrm = cpu_advance_ip() | ((opcode & 3) << 8) | (is_seg or 0)
  local data = mrm_table[modrm]
 
@@ -444,6 +445,22 @@ local function cpu_mod_rm(opcode, is_seg)
  end
 
  return data
+=======
+    local modrm = cpu_advance_ip() -bor- ((opcode -band- 3) -blshift- 8) -bor- (is_seg or 0)
+    local data = mrm_table[modrm]
+    
+    if data.cdisp == 0 then
+        return data
+    elseif data.cdisp == 2 then
+        data.disp = to_s16(cpu_advance_ip16())
+    elseif data.cdisp == 1 then
+        data.disp = to_s8(cpu_advance_ip())
+    elseif data.cdisp == 3 then
+        data.disp = cpu_advance_ip16()
+    end
+    
+    return data
+>>>>>>> parent of 202f250 (Fixed some things)
 end
 
 local function cpu_mrm_copy(data)
@@ -492,7 +509,11 @@ for i = 0,255 do
 end
 
 local function cpu_write_parity(v)
+<<<<<<< HEAD
  CPU_FLAGS = CPU_FLAGS & 0xFFFB | parity_table[v & 0xFF]
+=======
+    CPU_FLAGS = CPU_FLAGS -band- 0xFFFB -bor- parity_table[v -band- 0xFF]
+>>>>>>> parent of 202f250 (Fixed some things)
 end
 
 
@@ -515,6 +536,7 @@ local function cpu_mov(mrm)
 end
 
 local function _cpu_uf_zsp(vr, opc)
+<<<<<<< HEAD
  if (opc & 0x01) == 1 then
   cpu_write_flag(6, (vr & 0xFFFF) == 0)
   cpu_write_flag(7, (vr & 0x8000) ~= 0)
@@ -524,6 +546,17 @@ local function _cpu_uf_zsp(vr, opc)
   cpu_write_flag(7, (vr & 0x80) ~= 0)
   CPU_FLAGS = CPU_FLAGS & 0xFFFB | parity_table[vr & 0xFF]
  end
+=======
+    if (opc -band- 0x01) == 1 then
+        cpu_write_flag(6, (vr -band- 0xFFFF) == 0)
+        cpu_write_flag(7, (vr -band- 0x8000) ~= 0)
+        CPU_FLAGS = CPU_FLAGS -band- 0xFFFB -bor- parity_table[vr -band- 0xFF]
+    else
+        cpu_write_flag(6, (vr -band- 0xFF) == 0)
+        cpu_write_flag(7, (vr -band- 0x80) ~= 0)
+        CPU_FLAGS = CPU_FLAGS -band- 0xFFFB -bor- parity_table[vr -band- 0xFF]
+    end
+>>>>>>> parent of 202f250 (Fixed some things)
 end
 
 local function _cpu_uf_inc(vr, opc)
@@ -895,6 +928,7 @@ local function cpu_or(mrm, opc)
 end
 
 local function cpu_print_state(opcode, adv)
+<<<<<<< HEAD
  cpu_print(string.format("AX:%04X CX:%04X DX:%04X BX:%04X SP:%04X BP:%04X SI:%04X DI:%04X | %04X %04X %04X %04X | %04X",
   CPU_REGS[1], CPU_REGS[2], CPU_REGS[3], CPU_REGS[4], CPU_REGS[5], CPU_REGS[6], CPU_REGS[7], CPU_REGS[8],
   CPU_SEGMENTS[1], CPU_SEGMENTS[2], CPU_SEGMENTS[3], CPU_SEGMENTS[4], CPU_FLAGS))
@@ -912,6 +946,25 @@ local function cpu_print_state(opcode, adv)
   end
   cpu_print("FLAGS ADV:" .. s2)
  end
+=======
+    cpu_print(string.format("AX:%04X CX:%04X DX:%04X BX:%04X SP:%04X BP:%04X SI:%04X DI:%04X -bor- %04X %04X %04X %04X -bor- %04X",
+    CPU_REGS[1], CPU_REGS[2], CPU_REGS[3], CPU_REGS[4], CPU_REGS[5], CPU_REGS[6], CPU_REGS[7], CPU_REGS[8],
+    CPU_SEGMENTS[1], CPU_SEGMENTS[2], CPU_SEGMENTS[3], CPU_SEGMENTS[4], CPU_FLAGS))
+    -- cpu_print(string.format("%02X (flags %04X, seg ES %04X CS %04X SS %04X DS %04X)", opcode, CPU_FLAGS, CPU_SEGMENTS[1], CPU_SEGMENTS[2], CPU_SEGMENTS[3], CPU_SEGMENTS[4]))
+    -- cpu_print(string.format("AX %04X CX %04X DX %04X BX %04X SP %04X BP %04X SI %04X DI %04X", CPU_REGS[1], CPU_REGS[2], CPU_REGS[3], CPU_REGS[4], CPU_REGS[5], CPU_REGS[6], CPU_REGS[7], CPU_REGS[8]))
+    if adv then
+        local s = "c?p?a?zstidoppn?"
+        local s2 = ""
+        local fl = CPU_FLAGS
+        for i=0,15 do
+            local s3 = s:sub(i + 1, i + 1)
+            if (fl -band- 1) == 1 then s3 = s3:upper() end
+            s2 = s2 .. s3
+            fl = fl -brshift- 1
+        end
+        cpu_print("FLAGS ADV:" .. s2)
+    end
+>>>>>>> parent of 202f250 (Fixed some things)
 end
 
 local function cpu_rep(cond)
@@ -1025,6 +1078,7 @@ local function cpu_int_fake(cond)
 end
 
 local function cpu_int(cond)
+<<<<<<< HEAD
  local addr = RAM:r16(cond * 4)
  local seg = RAM:r16(cond * 4 + 2)
 
@@ -1039,6 +1093,22 @@ local function cpu_int(cond)
  CPU_HALTED=false
 
  CPU_FLAGS = CPU_FLAGS & (~(1 << (9)))
+=======
+    local addr = RAM:r16(cond * 4)
+    local seg = RAM:r16(cond * 4 + 2)
+    
+    
+    
+    cpu_push16(CPU_FLAGS)
+    cpu_push16(CPU_SEGMENTS[2])
+    cpu_push16(CPU_IP)
+    
+    CPU_SEGMENTS[2]=seg
+    CPU_IP=addr
+    CPU_HALTED=false
+    
+    CPU_FLAGS = CPU_FLAGS -band- (bnot-(1 -blshift- (9)))
+>>>>>>> parent of 202f250 (Fixed some things)
 end
 
 local rel_jmp_conds = {
@@ -2071,6 +2141,7 @@ end
 
 
 run_one = function(no_interrupting, pr_state)
+<<<<<<< HEAD
  if CPU_HASINT and not no_interrupting then
 -- local intr = table.remove(CPU_INTQUEUE, 1)
   local intr = CPU_INTQUEUE[1]
@@ -2121,6 +2192,74 @@ run_one = function(no_interrupting, pr_state)
   cpu_emit_interrupt(6, false)
   return true
  end
+=======
+    if ((os.epoch("utc") / 1000) - clock) >= 1 then
+        emu_debug(2, "noblock " .. tostring(clock % 1000))
+        platform_kbd_tick()
+        clock = os.epoch("utc") / 1000
+    end
+
+    if CPU_HASINT and not no_interrupting then
+        -- local intr = table.remove(CPU_INTQUEUE, 1)
+        local intr = CPU_INTQUEUE[1]
+        if intr ~= nil then
+            if intr >= 256 or ((CPU_FLAGS -band- (1-blshift-(9))) ~= 0) then
+                table.remove(CPU_INTQUEUE, 1)
+                cpu_int(intr -band- 0xFF)
+                if #CPU_INTQUEUE == 0 then CPU_HASINT = false end
+            end
+        end
+    end
+
+    if ((os.epoch("utc") / 1000) - clock) >= 1 then
+            emu_debug(2, "noblock " .. tostring(clock % 1000))
+            platform_kbd_tick()
+            clock = os.epoch("utc") / 1000
+        end
+    
+    if ((CPU_IP -band- 0xFF00) == 0x1100) and (CPU_SEGMENTS[2] == 0xF000) then
+        CPU_FLAGS = CPU_FLAGS -bor- (1 -blshift- (9)) -- enable interrupts during (after!) fake handlers
+        local intr = cpu_int_fake(CPU_IP -band- 0xFF)
+        if intr ~= "block" then
+            CPU_IP = cpu_pop16()
+            CPU_SEGMENTS[2] = cpu_pop16()
+            local old_flags = cpu_pop16()
+            local old_flag_mask = 0x0200
+            CPU_FLAGS = (CPU_FLAGS -band- (bnot-old_flag_mask)) -bor- (old_flags -band- old_flag_mask)
+            return true
+        else
+            return "block"
+        end
+    end
+    
+    local opcode = cpu_advance_ip()
+    
+    
+    
+    
+    local om = opcode_map[opcode]
+    
+    
+    if ((os.epoch("utc") / 1000) - clock) >= 1 then
+        emu_debug(2, "noblock " .. tostring(clock % 1000))
+        platform_kbd_tick()
+        clock = os.epoch("utc") / 1000
+    end
+    
+    if om ~= nil then
+        local result = om(opcode)
+        if result ~= nil then
+            return result
+        else
+            return true
+        end
+    else
+        emu_debug(2, "unknown opcode: " .. string.format("%02X", opcode))
+        cpu_print_state(opcode)
+        cpu_emit_interrupt(6, false)
+        return true
+    end
+>>>>>>> parent of 202f250 (Fixed some things)
 end
 
 function cpu_emit_interrupt(v, nmi)
@@ -2207,6 +2346,7 @@ local function upd_tick(cv)
 end
 
 local function cpu_execute()
+<<<<<<< HEAD
  if CPU_HALTED and not CPU_HASINT then return "block" end
 
  execute = true
@@ -2221,6 +2361,26 @@ local function cpu_execute()
   opc = opc + 1
  end
  platform_error("execution stopped\n")
+=======
+    if CPU_HALTED and not CPU_HASINT then return "block" end
+    
+    execute = true
+    while execute == true do
+        execute = run_one(false, true)
+        if execute == "block" then
+            upd_tick(os.epoch("utc") / 1000)
+            execute = true
+        elseif ((opc -band- 0x1FF) == 0) and ((os.epoch("utc") / 1000) - clock) >= 0.05 then
+            upd_tick(os.epoch("utc") / 1000)
+        elseif ((os.epoch("utc") / 1000) - clock) >= 1 then
+            emu_debug(2, "noblock " .. tostring(clock % 1000))
+            platform_kbd_tick()
+            clock = os.epoch("utc") / 1000
+        end
+        opc = opc + 1
+    end
+    platform_error("execution stopped\n")
+>>>>>>> parent of 202f250 (Fixed some things)
 end
 
 function emu_execute()
