@@ -117,7 +117,7 @@ io_seek = {open = function(_sPath, _sMode)
                     end
                 elseif whence == "end" then
                     file.close()
-                    file = fs.open(_sPath, "rb")
+                    file = fs.open(_sPath, "r")
                     local sz = 0
                     while file.read() ~= nil do sz = sz + 1 end
                     file.close()
@@ -237,11 +237,11 @@ io_seek = {open = function(_sPath, _sMode)
 		error( "Unsupported mode", 2 )
 		
     end
-end}--]] io_seek = io
+end}
 
 function platform_sleep(t)
     -- for what pvrpose
-    platform_kbd_tick()
+    --platform_kbd_tick()
 	os.sleep(t)
 end
 
@@ -317,9 +317,8 @@ function platform_error(msg)
     term.setCursorPos(1, 1)
     term.setBackgroundColor(colors.black)
     term.setTextColor(colors.red)
-    if CCLog then CCLog.default:traceback("lunatic86", msg) end
-    if CCLog then CCLog.default:close() end
-    printError(msg)
+    --CCLog.default:traceback("lunatic86", msg)
+    --CCLog.default:close()
     error(msg, 2)
 end
 
@@ -483,4 +482,3 @@ function setEGAColors()
 end
 
 dofile(pwd .. "emu_core.lua")
-
