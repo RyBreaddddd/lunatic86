@@ -1,8 +1,5 @@
-local termw, termh = term.getSize()
-if termw < 80 or termh < 25 then error("Terminal size must be >= 80x25") end
 local keysDown = {}
 local lastKey = nil
-local crash_on_gfx_fail = false
 
 band = {}
 bor = {}
@@ -239,8 +236,7 @@ io_seek = {open = function(_sPath, _sMode)
 end}
 
 function platform_sleep(t)
-    -- for what pvrpose
-    platform_kbd_tick()
+	-- for what pvrpose
 	os.sleep(t)
 end
 
@@ -297,7 +293,6 @@ function platform_error(msg)
     platform_finish()
     term.clear()
     term.setCursorPos(1, 1)
-    printError(msg)
     error(msg, 2)
 end
 
@@ -313,35 +308,31 @@ end
 
 function platform_render_cga_mono(vram, addr)
 	platform_kbd_tick()
-    emu_debug(2, "Graphics mode: CGA Mono")
-    if not term.getGraphicsMode then if crash_on_gfx_fail then error("Graphics modes require CraftOS-PC v1.2 or later.") else return end end
+    print("Graphics mode: CGA Mono")
     --term.setGraphicsMode(true)
 end
 
 function platform_render_mcga_13h(vram, addr)
 	platform_kbd_tick()
-    emu_debug(2, "Graphics mode: MCGA")
-    if not term.getGraphicsMode then if crash_on_gfx_fail then error("Graphics modes require CraftOS-PC v1.2 or later.") else return end end
+    print("Graphics mode: MCGA")
     --term.setGraphicsMode(true)
 end
 
 function platform_render_pcjr_160(vram, addr)
 	platform_kbd_tick()
-    emu_debug(2, "Graphics mode: PCjr 160x200")
-    if not term.getGraphicsMode then if crash_on_gfx_fail then error("Graphics modes require CraftOS-PC v1.2 or later.") else return end end
+    print("Graphics mode: PCjr 160x200")
     --term.setGraphicsMode(true)
 end
 
 function platform_render_pcjr_320(vram, addr)
 	platform_kbd_tick()
-    emu_debug(2, "Graphics mode: PCjr 320x200")
-    if not term.getGraphicsMode then if crash_on_gfx_fail then error("Graphics modes require CraftOS-PC v1.2 or later.") else return end end
+    print("Graphics mode: PCjr 320x200")
     --term.setGraphicsMode(true)
 end
 
 function platform_render_text(vram, addr, width, height, pitch)
 	platform_kbd_tick()
-    if term.getGraphicsMode and term.getGraphicsMode() then term.setGraphicsMode(false) end
+    if term.getGraphicsMode() then term.setGraphicsMode(false) end
     local dlines = video_pop_dirty_lines()
     local cx, cy = term.getCursorPos()
     term.setCursorBlink(false)
@@ -372,9 +363,7 @@ end end
 
 function platform_finish()
     for k,v in pairs(cmap) do term.setPaletteColor(colors[k], v.r / 255, v.g / 255, v.b / 255) end
-    if term.getGraphicsMode and term.getGraphicsMode() then term.setGraphicsMode(false) end
-    term.setBackgroundColor(colors.black)
-    term.setTextColor(colors.white)
+    if term.getGraphicsMode() then term.setGraphicsMode(false) end
     --term.clear()
     --term.setCursorPos(1, 1)
 end
