@@ -257,6 +257,9 @@ end}
 function platform_sleep(t)
     -- for what pvrpose
     --platform_kbd_tick()
+<<<<<<< HEAD
+>>>>>>> parent of 202f250 (Fixed some things)
+=======
 >>>>>>> parent of 202f250 (Fixed some things)
 	os.sleep(t)
 end
@@ -282,6 +285,7 @@ local queued_up = {}
 -- non-blocking, returns (ascii char, bios scan code) or nil on none
 function platform_getc()
 <<<<<<< HEAD
+<<<<<<< HEAD
 	local c = lastKey
 	if type(c) == "string" then c = string.byte() end
 	if c == 263 then c = 8 end
@@ -291,6 +295,8 @@ function platform_getc()
 		else return 0,c end
 	end
 =======
+=======
+>>>>>>> parent of 202f250 (Fixed some things)
     os.queueEvent("noblock")
     local ev, c = os.pullEvent()
     if ev == "key" then
@@ -305,6 +311,9 @@ function platform_getc()
         last_key = nil
     end
     if ev ~= "noblock" then return -1 end
+<<<<<<< HEAD
+>>>>>>> parent of 202f250 (Fixed some things)
+=======
 >>>>>>> parent of 202f250 (Fixed some things)
 	return nil
 end
@@ -332,6 +341,9 @@ function platform_kbd_tick()
 			kbd_send_ibm(code, ch)
         elseif ch ~= -1 then getmore = false end
 	end
+<<<<<<< HEAD
+>>>>>>> parent of 202f250 (Fixed some things)
+=======
 >>>>>>> parent of 202f250 (Fixed some things)
 end
 
@@ -387,4 +399,7 @@ end
 dofile("emu_core.lua")
 =======
 dofile(pwd .. "emu_core.lua")
+<<<<<<< HEAD
+>>>>>>> parent of 202f250 (Fixed some things)
+=======
 >>>>>>> parent of 202f250 (Fixed some things)
